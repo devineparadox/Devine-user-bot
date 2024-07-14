@@ -2,9 +2,9 @@ import asyncio
 from pyrogram import Client, filters
 
 # User credentials
-API_ID = "YOUR_API_ID"
-API_HASH = "YOUR_API_HASH"
-PHONE_NUMBER = "YOUR_PHONE_NUMBER"
+API_ID = 10803194
+API_HASH = "e09f0ed31c8a5e4a1362d4257210d972"
+PHONE_NUMBER = "+917003729439"
 
 # Create a Pyrogram client
 app = Client("user_bot", api_id=API_ID, api_hash=API_HASH, phone_number=PHONE_NUMBER)
