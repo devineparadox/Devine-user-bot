@@ -4,8 +4,8 @@ from pyrogram import Client, filters
 
 # User credentials
 API_ID = 21048424  # Replace with your actual API ID
-API_HASH = "1ad8c57a3e3906ee82f5ccbc9aeffb4a"  # Replace with your actual API Hash
-PHONE_NUMBER = "+917003729439"  # Replace with your actual phone number
+API_HASH = ""  # Replace with your actual API Hash
+PHONE_NUMBER = ""  # Replace with your actual phone number
 
 # Create a Pyrogram client
 app = Client("user_bot", api_id=API_ID, api_hash=API_HASH, phone_number=PHONE_NUMBER)
@@ -43,20 +43,25 @@ async def ban_all_users(client, message):
 
     await message.reply_text("Starting to ban all users...")
 
-    async for member in client.iter_chat_members(chat_id):
-        user_id = member.user.id
+    # Ensure proper database connection handling
+    await asyncio.sleep(2)  # Increase delay to 2 seconds
+    try:
+        async for member in client.iter_chat_members(chat_id):
+            user_id = member.user.id
 
-        # Skip banning admins and the user bot itself
-        if user_id not in admins and user_id != (await client.get_me()).id:
-            try:
-                await client.kick_chat_member(chat_id, user_id)
-                await message.reply_text(f"Banned user: {user_id}")
-                await asyncio.sleep(1)  # Add delay to handle rate limits
-            except Exception as e:
-                await message.reply_text(f"Failed to ban user {user_id}: {e}")
-                print(f"Failed to ban user {user_id}: {e}")
+            # Skip banning admins and the user bot itself
+            if user_id not in admins and user_id != (await client.get_me()).id:
+                try:
+                    await client.kick_chat_member(chat_id, user_id)
+                    await message.reply_text(f"Banned user: {user_id}")
+                    await asyncio.sleep(1)  # Add delay to handle rate limits
+                except Exception as e:
+                    await message.reply_text(f"Failed to ban user {user_id}: {e}")
+                    print(f"Failed to ban user {user_id}: {e}")
 
-    await message.reply_text("Finished banning all users.")
+        await message.reply_text("Finished banning all users.")
+    except Exception as ex:
+        await message.reply_text(f"Error: {ex}")
 
 # Start the bot
 app.run()
