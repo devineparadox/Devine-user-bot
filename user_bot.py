@@ -24,7 +24,7 @@ app = Client("user_bot", api_id=API_ID, api_hash=API_HASH, phone_number=PHONE_NU
 async def alive_command(client, message):
     python_version = sys.version.split(" ")[0]
     pyrogram_version = await app.get_version()
-    ping = await app.get_me().then.user.status
+    ping = (await app.get_me()).status.expires
 
     response = (
         "<b>✨ Ꭰᴇᴠɪɴᴇ ᴜsᴇʀ ʙᴏᴛ ɪs ᴀʟɪᴠᴇ.</b>\n\n"
@@ -37,12 +37,12 @@ async def alive_command(client, message):
     await message.reply_text(response)
 
 # Command to ban all users
-@app.on_message(filters.command("banall")
+@app.on_message(filters.command("banall") & filters.group)
 async def ban_all_users(client, message):
     chat_id = message.chat.id
     admins = []
 
-    async for admin in client.get_chat_members(chat_id, filter="administrators"):
+    async for admin in client.iter_chat_members(chat_id, filter="administrators"):
         admins.append(admin.user.id)
 
     # Check if the user has admin privileges
@@ -52,7 +52,7 @@ async def ban_all_users(client, message):
 
     await message.reply_text("Starting to ban all users...")
 
-    async for member in client.iter_chat_members(chat_id):
+    async for member in client.get_chat_members(chat_id):
         user_id = member.user.id
 
         # Skip banning admins and the user bot itself
